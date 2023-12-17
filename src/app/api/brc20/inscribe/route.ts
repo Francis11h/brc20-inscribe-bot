@@ -10,6 +10,7 @@ import { keys } from "@cmdcode/crypto-utils";
 */
 export async function POST(req: NextRequest): Promise<any> {
   const requestData = await req.json();
+  console.log('requestData ====', requestData)
   // 读取数据
   const secret = requestData.secret;
   const text = requestData.text;
@@ -76,6 +77,8 @@ export async function POST(req: NextRequest): Promise<any> {
     ],
   });
 
+  console.log('txdata ==', txdata)
+
   // For this example, we are signing for input 0 of our transaction,
   // using the untweaked secret key. We are also extending the signature
   // to include a commitment to the tapleaf script that we wish to use.
@@ -93,6 +96,9 @@ export async function POST(req: NextRequest): Promise<any> {
   console.log("Your txhex:", Tx.encode(txdata).hex);
   const result = await broardTx(Tx.encode(txdata).hex, network);
   // await broadcast(Tx.encode(txdata).hex);
+
+  console.log('result ==', result)
+
   return new Response(
     JSON.stringify({
       message: "ok",

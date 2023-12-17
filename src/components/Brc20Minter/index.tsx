@@ -64,7 +64,7 @@ const Brc20Minter = () => {
   const [isQueryTick, getIsQueryTick, setIsQueryTick] = useLoading();
   const updateAmount = useCallback(
     async (tick: string) => {
-      if (!getIsQueryTick() && protocol === 'brc-20') {
+      if (!getIsQueryTick() && protocol === "brc-20") {
         try {
           setIsQueryTick(true);
           const res = await fetchTickInfo(tick);
@@ -89,8 +89,11 @@ const Brc20Minter = () => {
         updateAmount(searchParams.get("tick") as string);
       }
     }
-    if (searchParams.get('protocol') && ['brc-20', 'brc-100'].includes(searchParams.get('protocol') as string)) {
-      setProtocol(searchParams.get('protocol') as 'brc-20' | 'brc-100')
+    if (
+      searchParams.get("protocol") &&
+      ["brc-20", "brc-100"].includes(searchParams.get("protocol") as string)
+    ) {
+      setProtocol(searchParams.get("protocol") as "brc-20" | "brc-100");
     }
   }, [amt, searchParams, updateAmount]);
 
@@ -103,7 +106,7 @@ const Brc20Minter = () => {
     _addr: string,
     _receipt: string,
     _fee: number,
-    _protocol: string,
+    _protocol: string
   ) => {
     setOrderList([
       {
@@ -148,7 +151,6 @@ const Brc20Minter = () => {
   };
 
   const handleTransfer = async (priv: string) => {
-
     try {
       const secret = generatePrivateKey();
       const _inscriptionAddress = generateInscribe(
@@ -162,7 +164,7 @@ const Brc20Minter = () => {
       if (protocol === "brc-100") {
         base = 294;
       }
-      const fee = feeRate[speed] * 154 + base
+      const fee = feeRate[speed] * 154 + base;
 
       setIsInscribing(true);
       const taskId = uuidV4();
@@ -183,6 +185,7 @@ const Brc20Minter = () => {
         generateAddressFromPubKey(wallet?.publicKey as string, network),
         network
       );
+      console.log("txid ==", txid);
       changeOrderStatus(taskId, "waiting_mint");
       if (protocol === "brc-20") {
         await inscribeBrc20Mint(
@@ -193,7 +196,7 @@ const Brc20Minter = () => {
           fee,
           to,
           546,
-          network,
+          network
         );
         changeOrderStatus(taskId, "minted");
         router.push("/orders");
@@ -264,7 +267,7 @@ const Brc20Minter = () => {
             <input
               type="number"
               value={amt}
-              disabled={protocol === 'brc-20'}
+              // disabled={protocol === "brc-20"}
               className="mt-1 input border border-slate-300 bg-transparent px-2 py-1 rounded h-fit focus:border-black !outline-none"
               onChange={(e) => {
                 setAmt(e.target.value ? Number(e.target.value) : 0);

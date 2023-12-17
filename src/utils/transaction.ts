@@ -60,7 +60,7 @@ export const sendBTC = async (
 ) => {
   const safeUtxos = utxos.filter((utxo) => utxo.value > 1000);
   const selected = selectUtxos(safeUtxos, amount, feeRate);
-  console.log(selected);
+  console.log('selected ==', selected);
   const inputs = selected.map((utxo) => ({
     txid: utxo.txid,
     vout: utxo.vout,
@@ -68,11 +68,11 @@ export const sendBTC = async (
     address: changeAddress,
   }));
 
-  console.log(Address.toScriptPubKey(changeAddress))
+  console.log('addr ==', Address.toScriptPubKey(changeAddress))
 
-  const remainedValue = Math.floor(selected.reduce((sum, utxo) => sum + utxo.value, 0) - amount - estimateTxSize(selected.length , 2) * feeRate)
+  const remainedValue = Math.floor(selected.reduce((sum, utxo) => sum + utxo.value, 0) - amount - estimateTxSize(selected.length, 2) * feeRate)
 
-  console.log(remainedValue)
+  console.log('remainedValue ==', remainedValue)
   const [tseckey] = Tap.getSecKey(priv);
 
   const txdata = Tx.create({
@@ -82,7 +82,8 @@ export const sendBTC = async (
       prevout: {
         value: input.value,
         scriptPubKey: Address.toScriptPubKey(changeAddress),
-      }})),
+      }
+    })),
     vout: [
       {
         // We are locking up 99_000 sats (minus 1000 sats for fees.)
@@ -93,7 +94,7 @@ export const sendBTC = async (
         ),
       },
       {
-        value: selected.reduce((sum, utxo) => sum + utxo.value, 0) - amount - estimateTxSize(selected.length , 2) * feeRate,
+        value: selected.reduce((sum, utxo) => sum + utxo.value, 0) - amount - estimateTxSize(selected.length, 2) * feeRate,
         scriptPubKey: Address.toScriptPubKey(
           changeAddress
         ),
@@ -131,9 +132,9 @@ export const sendBTCByPriv = async (
   changeAddress: string,
   network: "main" | "testnet"
 ) => {
-  console.log(priv)
+  console.log('priv==', priv)
   const utxos = await fetchAddressUtxo(changeAddress, network);
-  console.log(changeAddress, utxos);
+  console.log('changeAddress, utxos ==', changeAddress, utxos);
   const result = await sendBTC(priv, utxos, amount, feeRate, toAddress, changeAddress, network);
   return result;
 }
